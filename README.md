@@ -21,6 +21,21 @@ Scan an entire drive:
 python large_file_finder.py --drive C --top 10
 ```
 
+## Desktop UI
+
+Launch the clean button-based interface:
+
+```bash
+python large_file_finder_ui.py
+```
+
+Features:
+
+- One-click drive buttons (`C:\`, `D:\`, etc.)
+- Top-files selector
+- Scrollable results list with file path and size
+- Live scan status
+
 ## Example Output
 
 ```text
