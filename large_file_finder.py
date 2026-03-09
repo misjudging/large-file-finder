@@ -8,7 +8,19 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Scan a directory and show the largest files."
     )
-    parser.add_argument("path", type=Path, help="Directory to scan")
+    parser.add_argument(
+        "path",
+        type=Path,
+        nargs="?",
+        default=None,
+        help="Directory to scan (defaults to current directory)",
+    )
+    parser.add_argument(
+        "--drive",
+        type=str,
+        default=None,
+        help="Windows drive to scan, e.g. C or D:",
+    )
     parser.add_argument(
         "-n",
         "--top",
@@ -27,6 +39,22 @@ def parse_args() -> argparse.Namespace:
         help="Include hidden files and folders",
     )
     return parser.parse_args()
+
+
+def resolve_target(path: Path | None, drive: str | None) -> Path:
+    if path is not None and drive is not None:
+        raise SystemExit("Use either a path or --drive, not both.")
+
+    if drive is not None:
+        drive_letter = drive.rstrip(":").upper()
+        if len(drive_letter) != 1 or not drive_letter.isalpha():
+            raise SystemExit("Invalid drive. Use a single letter like C or D.")
+        return Path(f"{drive_letter}:\\")
+
+    if path is not None:
+        return path.resolve()
+
+    return Path.cwd().resolve()
 
 
 def is_hidden(path: Path) -> bool:
@@ -63,7 +91,7 @@ def collect_files(path: Path, recursive: bool, include_hidden: bool) -> list[tup
 
 def main() -> None:
     args = parse_args()
-    target = args.path.resolve()
+    target = resolve_target(args.path, args.drive)
 
     if not target.exists() or not target.is_dir():
         raise SystemExit(f"Invalid directory: {target}")

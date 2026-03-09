@@ -15,6 +15,12 @@ Fast, no-nonsense CLI tool to find what is eating your disk space.
 python large_file_finder.py "C:\path\to\folder" --top 5
 ```
 
+Scan an entire drive:
+
+```bash
+python large_file_finder.py --drive C --top 10
+```
+
 ## Example Output
 
 ```text
@@ -31,7 +37,8 @@ Top 5 largest files:
 
 ## Arguments
 
-- `path`: folder to scan (required)
+- `path`: folder to scan (optional, defaults to current directory)
+- `--drive`: scan a full Windows drive (example: `--drive C` or `--drive D:`)
 - `--top`, `-n`: number of files to show (default: `5`)
 - `--no-recursive`: only scan files directly inside the selected folder
 - `--include-hidden`: include hidden files and folders
